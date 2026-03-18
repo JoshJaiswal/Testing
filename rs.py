@@ -8,11 +8,19 @@ from typing import Any, cast
 from dataclasses import dataclass
 
 import requests
-"python orchestration/functions-or-container-app/run_pipeline.py --input orchestration/functions-or-container-app/run_pipeline.py --type nda --no-blob
+"python orchestration/functions/run_pipeline.py --input tests/fixtures/some-contract.pdf --type nda --no-blob
+INFO:__main__:[Pipeline] Starting — file=some-contract.pdf, type=nda
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\some-contract.pdf
 Traceback (most recent call last):
-  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions-or-container-app\run_pipeline.py", line 23, in <module>
-    from orchestration.functions.map_to_canonical import map_to_canonical
-ModuleNotFoundError: No module named 'orchestration'"
+  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions\run_pipeline.py", line 118, in <module>
+    result = run_pipeline(
+             ^^^^^^^^^^^^^
+  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions\run_pipeline.py", line 82, in run_pipeline
+    raw_results: list[dict] = handler(
+                              ^^^^^^^^
+  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\normalization\pdf_handler.py", line 126, in handle_pdf
+    raise EnvironmentError("AZURE_CU_ENDPOINT and AZURE_CU_KEY must be set in .env")
+OSError: AZURE_CU_ENDPOINT and AZURE_CU_KEY must be set in .env"
 
 def main():
     settings = Settings(

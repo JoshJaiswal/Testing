@@ -8,7 +8,11 @@ from typing import Any, cast
 from dataclasses import dataclass
 
 import requests
-
+"python orchestration/functions-or-container-app/run_pipeline.py --input orchestration/functions-or-container-app/run_pipeline.py --type nda --no-blob
+Traceback (most recent call last):
+  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions-or-container-app\run_pipeline.py", line 23, in <module>
+    from orchestration.functions.map_to_canonical import map_to_canonical
+ModuleNotFoundError: No module named 'orchestration'"
 
 def main():
     settings = Settings(

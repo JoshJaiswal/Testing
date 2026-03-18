@@ -1,0 +1,122 @@
+# canonical/mapping-matrix.yaml
+
+mappings:
+  - canonicalPath: normalizedParties[]
+    sourceAnalyzer: deal-intake-doc-v2
+    sourceField: clientName
+    transform: to_party(role=client)
+    confidenceSource: direct
+    precedence: 3
+
+  - canonicalPath: normalizedParties[]
+    sourceAnalyzer: nda-extractor-enterprise-v1
+    sourceField: parties
+    transform: parse_delimited_parties
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: normalizedParties[]
+    sourceAnalyzer: sow-extractor-enterprise
+    sourceField: parties
+    transform: parse_delimited_parties
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: normalizedSigners[]
+    sourceAnalyzer: nda-extractor-enterprise-v1
+    sourceField: partiesSigners
+    transform: parse_signers
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: normalizedSigners[]
+    sourceAnalyzer: sow-extractor-enterprise
+    sourceField: partiesSigners
+    transform: parse_signers
+    confidenceSource: analyzer
+    precedence: 4
+
+  - canonicalPath: nda.effectiveDate
+    sourceAnalyzer: nda-extractor-enterprise-v1
+    sourceField: effectiveDate
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: sow.scopeSummary
+    sourceAnalyzer: sow-extractor-enterprise
+    sourceField: scopeSummary
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: sow.projectTimeline
+    sourceAnalyzer: sow-extractor-enterprise
+    sourceField: projectTimelineComposite
+    transform: parse_timeline_rows
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: legal.governingLaw
+    sourceAnalyzer: nda-extractor-enterprise-v1
+    sourceField: governingLaw
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 4
+
+  - canonicalPath: legal.governingLaw
+    sourceAnalyzer: sow-extractor-enterprise
+    sourceField: governingLaw
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 3
+
+  # Added mappings for this workspace analyzer IDs
+  - canonicalPath: parties.client.name
+    sourceAnalyzer: deal_intake
+    sourceField: clientName
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: parties.vendor.name
+    sourceAnalyzer: deal_intake
+    sourceField: vendorName
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: commercials.totalValue
+    sourceAnalyzer: deal_intake
+    sourceField: dealValue
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: dates.effectiveDate
+    sourceAnalyzer: nda
+    sourceField: effectiveDate
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: dates.expirationDate
+    sourceAnalyzer: nda
+    sourceField: expirationDate
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: confidentiality.term
+    sourceAnalyzer: nda
+    sourceField: confidentialityTerm
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5
+
+  - canonicalPath: legal.governingLaw
+    sourceAnalyzer: nda
+    sourceField: governingLaw
+    transform: as_is
+    confidenceSource: analyzer
+    precedence: 5

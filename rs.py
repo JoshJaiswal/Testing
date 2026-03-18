@@ -8,19 +8,111 @@ from typing import Any, cast
 from dataclasses import dataclass
 
 import requests
-"python orchestration/functions/run_pipeline.py --input tests/fixtures/some-contract.pdf --type nda --no-blob
-INFO:__main__:[Pipeline] Starting — file=some-contract.pdf, type=nda
-INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\some-contract.pdf
-Traceback (most recent call last):
-  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions\run_pipeline.py", line 118, in <module>
-    result = run_pipeline(
-             ^^^^^^^^^^^^^
-  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\orchestration\functions\run_pipeline.py", line 82, in run_pipeline
-    raw_results: list[dict] = handler(
-                              ^^^^^^^^
-  File "C:\Users\DZ975HB\Documents\contract-intelligence-platform\normalization\pdf_handler.py", line 126, in handle_pdf
-    raise EnvironmentError("AZURE_CU_ENDPOINT and AZURE_CU_KEY must be set in .env")
-OSError: AZURE_CU_ENDPOINT and AZURE_CU_KEY must be set in .env"
+"python orchestration/functions/run_pipeline.py --input tests/fixtures/deal-intake-sample-structured.pdf --type nda --no-blob
+INFO:__main__:[Pipeline] Starting — file=deal-intake-sample-structured.pdf, type=nda
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\deal-intake-sample-structured.pdf
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to core-deal-intake-analyzer
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (4s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] In progress... (10s)
+INFO:normalization.pdf_handler:[CU] In progress... (13s)
+INFO:normalization.pdf_handler:[CU] In progress... (17s)
+INFO:normalization.pdf_handler:[CU] In progress... (20s)
+INFO:normalization.pdf_handler:[CU] Completed in 24.0s
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to nda-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (4s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] Completed in 10.1s
+INFO:__main__:[Pipeline] Extraction complete — 2 result(s) from handler
+INFO:__main__:[Pipeline] Merge complete
+INFO:__main__:[Pipeline] Schema validation passed
+{
+  "parties": {
+    "client": {
+      "name": "",
+      "signatories": []
+    },
+    "vendor": {
+      "name": "",
+      "signatories": []
+    }
+  },
+  "dates": {
+    "effectiveDate": "",
+    "expirationDate": "",
+    "executionDate": ""
+  },
+  "scope": {
+    "description": "",
+    "deliverables": [],
+    "milestones": []
+  },
+  "confidentiality": {
+    "term": "",
+    "obligations": [],
+    "exceptions": []
+  },
+  "commercials": {
+    "totalValue": "",
+    "paymentTerms": "",
+    "currency": ""
+  },
+  "legal": {
+    "governingLaw": "Prefer Tamil Nadu / India",
+    "jurisdiction": "",
+    "disputeResolution": ""
+  },
+  "risks": [],
+  "missingFields": [
+    "parties.client.name",
+    "parties.client.signatories",
+    "parties.vendor.name",
+    "parties.vendor.signatories",
+    "dates.effectiveDate",
+    "dates.expirationDate",
+    "dates.executionDate",
+    "scope.description",
+    "scope.deliverables",
+    "scope.milestones",
+    "confidentiality.term",
+    "confidentiality.obligations",
+    "confidentiality.exceptions",
+    "commercials.totalValue",
+    "commercials.paymentTerms",
+    "commercials.currency",
+    "legal.jurisdiction",
+    "legal.disputeResolution",
+    "risks",
+    "missingFields",
+    "conflicts",
+    "provenance",
+    "review.status",
+    "review.reviewReason",
+    "review.reviewedBy",
+    "review.reviewedAt"
+  ],
+  "conflicts": [],
+  "provenance": [
+    {
+      "canonicalPath": "legal.governingLaw",
+      "value": "Prefer Tamil Nadu / India",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.99
+    }
+  ],
+  "review": {
+    "status": "needs_review",
+    "reviewReason": [
+      "Critical fields missing: ['parties.client.name', 'parties.vendor.name', 'dates.effectiveDate']"
+    ],
+    "reviewedBy": "",
+    "reviewedAt": ""
+  }
+}"
 
 def main():
     settings = Settings(

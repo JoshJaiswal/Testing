@@ -1,0 +1,82 @@
+Deal Intake Notes — Contoso x Fabrikam 
+(NDA + SOW) 
+• Deal Intake Notes — Contoso x Fabrikam (NDA + SOW) 
+Meeting metadata 
+• Meeting date: 2026-03-11 
+• Type: Discovery / Deal intake 
+• Source: Sales call transcript + internal notes 
+• Prepared by: Josh Jaiswal 
+Participants 
+• Contoso (Customer) 
+• Anita Rao — Director, Procurement 
+• Vikram N — Head of Security & Compliance 
+• Fabrikam (Vendor) 
+• Riya Iyer — Account Executive 
+• Naveen S — Solutions Architect 
+• Legal (TBD) — Contracts counsel 
+Deal overview 
+• Contoso is evaluating Fabrikam to implement a document automation workflow for 
+vendor onboarding and contract review. They want an NDA first, followed by a 
+Statement of Work (SOW) for a 12-week pilot and potential production rollout. 
+Requested documents 
+• NDA: Mutual NDA preferred; Contoso will review vendor template but may require their 
+template. 
+• SOW: Required for pilot delivery and support. 
+Parties (legal) 
+• Customer legal entity: Contoso India Pvt. Ltd. 
+• Address: 123 OMR Road, Chennai, Tamil Nadu, India 
+• Vendor legal entity: Fabrikam Solutions Pvt. Ltd. 
+• Address: 456 Business Park, Bengaluru, Karnataka, India 
+Scope (Pilot SOW) 
+Objective 
+• Deploy a pilot for extracting key fields from procurement documents and generating 
+structured outputs for downstream systems. 
+In-scope deliverables 
+• Configure Content Understanding custom task `deal-intake-doc` for extracting deal 
+facts from transcripts/notes. 
+• Integrate extracted JSON output into Contoso’s internal workflow tool (REST webhook). 
+• Provide dashboards for intake volume, missing-field rate, and confidence distribution. 
+• Knowledge transfer session + admin guide. 
+Out of scope 
+• Full contract lifecycle management replacement 
+• Data warehouse buildout 
+Timeline & milestones 
+• Target NDA execution: 2026-03-18 
+• Pilot kickoff: 2026-03-24 
+• Pilot duration: 12 weeks 
+• Weekly status calls; mid-pilot checkpoint at week 6 
+Commercial terms (draft) 
+• Pricing model: Fixed-fee pilot + usage-based scale option post-pilot 
+• Pilot fee: INR 18,00,000 
+• Currency: INR 
+• Payment terms: Net 30 
+• Invoicing: 50% on kickoff, 50% on completion 
+• Taxes: GST extra as applicable 
+Security / compliance 
+• Data types: Procurement documents may include personal data (names, emails), 
+vendor bank details, and contract terms. 
+• Data residency: India preferred 
+• Compliance expectations: ISO 27001 alignment; basic SOC2 report acceptable if 
+available 
+• Security requirements: Encryption at rest and in transit; audit logs; role-based access 
+• DPA: Contoso indicates DPA likely required for production rollout. 
+Legal / contract preferences 
+• Governing law: Prefer Tamil Nadu / India (customer preference; to be confirmed) 
+• Confidentiality term: 3 years (preferred) 
+• Exceptions: Standard (public info, independently developed, required disclosure) 
+• Liability cap: Proposed cap at fees paid in last 12 months (customer asked for 
+discussion) 
+• IP: Customer retains ownership of customer data; vendor retains platform IP; customer 
+wants a license to outputs. 
+Open questions / missing info 
+• Who will sign (authorized signatory) on both sides? 
+• Final governing law / venue requirement 
+• Whether subcontractors will access data 
+• Support SLA expectations during pilot 
+• Any third-party pen-test requirements 
+Next steps 
+• Fabrikam to share NDA template today (owner: Riya; due: 2026-03-13) 
+• Contoso to confirm template preference (owner: Anita; due: 2026-03-15) 
+• Fabrikam legal to propose liability cap language (owner: Legal-TBD; due: 2026-03-16) 
+• Solutions team to send pilot plan & architecture overview (owner: Naveen; due: 2026
+03-17) 

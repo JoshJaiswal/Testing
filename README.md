@@ -1,3 +1,15 @@
+INFO:__main__:[Pipeline] Extraction complete — 2 result(s) from handler
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\deal-intake-sample-structured.pdf
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to core-deal-intake-analyzer
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] Completed in 7.0s
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to nda-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (4s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] Completed in 10.7s
+
 === RAW FIELDS FROM None ===
  dealName: Contoso x Fabrikam — NDA+SOW
  customerLegalName: Contoso India Pvt. Ltd.
@@ -29,17 +41,20 @@
  sowReadiness: A SOW can be drafted now, pending support SLA expectations during the pilot.
  ndaKeyPoints: - Mutual NDA preferred
 - Contoso to review vendor template
-- Confidentiality term: 3 years
- sowOutline: - Objective: Deploy pilot for document extraction       
+- NDA execution targeted for 2026-03-18
+ sowOutline: - Objective: Deploy pilot for document automation
 - In-scope deliverables: Configure task, integrate JSON output, provide dashboards
 - Out of scope: Full contract lifecycle management replacement       
+- Timeline: 12-week pilot with mid-pilot checkpoint
  setupFee: 1800000
  billingFrequency: oneTime
  invoicingTerms: 50% on kickoff, 50% on completion
  invoiceTriggers: [{'type': 'object', 'valueObject': {'trigger': {'type': 'string', 'valueString': 'kickoff,'}}}, {'type': 'object', 'valueObject': {'trigger': {'type': 'string', 'valueString': 'completion'}}}]
  invoiceSplit: 50% 50%
- extractedConflicts: - Governing law preference not confirmed        
+ extractedConflicts: - Governing law preference not finalized        
 - Liability cap language to be proposed
+- Support SLA expectations during pilot not defined
+ ndaTargetExecutionDate: 2026-03-13
 
 === RAW FIELDS FROM None ===
  disclosingParty: Contoso India Pvt. Ltd.
@@ -53,11 +68,11 @@
  dataResidencyRequirements: India preferred
  personalDataProcessing: yes
  governingLaw: Prefer Tamil Nadu / India
- parties: PARTY::Contoso India Pvt. Ltd. | ROLE::disclosing | SIGNERS::<Authorized Signatory>^^<Title>^^<Place>^^<YYYY-MM-DD> ;; PARTY::Fabrikam Solutions Pvt. Ltd. | ROLE::receiving | SIGNERS::<Authorized Signatory>^^<Title>^^<Place>^^<YYYY-MM-DD>
+ parties: PARTY::Contoso India Pvt. Ltd. | ROLE::disclosing | SIGNERS::<unknown>^^<unknown>^^<unknown>^^<unknown> || PARTY::Fabrikam Solutions Pvt. Ltd. | ROLE::receiving | SIGNERS::<unknown>^^<unknown>^^<unknown>^^<unknown>
  missingRequiredClauses: effectiveDate, definitionOfConfidentialInfo, permittedUse, permittedDisclosures, requiredDisclosureProtocol, returnOrDestructionObligations, survivalClauses, confidentialitySurvivalTrigger, noLicenseGranted, injunctiveRelief, assignmentClause, noticeProcedure, amendmentClause, terminationNoticeDays, publicityOrTrademarkRestriction, arbitrationSeat, arbitrationLanguage, arbitrationRulesOrStatute, arbitratorAppointment, disputeResolutionMechanism, jurisdiction
  unknownClauses: Open questions / missing info
- ndaSummary: Contoso and Fabrikam are entering a mutual NDA to explore a document automation workflow, with a confidentiality term of 3 years and a liability cap proposed at fees paid in the last 12 months. 
- ndaRiskAssessment: Potential risks include undefined effective date, missing clauses on permitted use and disclosures, and open questions regarding signatories and governing law.
+ ndaSummary: Contoso and Fabrikam are negotiating a mutual NDA to explore a document automation workflow. The NDA will have a confidentiality term of 3 years, with standard exceptions and a proposed liability cap at fees paid in the last 12 months.
+ ndaRiskAssessment: The NDA lacks specific clauses on permitted use, disclosure protocols, and injunctive relief, which may pose risks. Additionally, the governing law and authorized signatories are yet to be confirmed.
 INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'legal.governingLaw' — chose 'deal_intake' over ['nda']
 INFO:__main__:[Pipeline] Merge complete
 INFO:__main__:[Pipeline] Schema validation passed
@@ -73,7 +88,7 @@ INFO:__main__:[Pipeline] Schema validation passed
     }
   },
   "dates": {
-    "effectiveDate": "",
+    "effectiveDate": "2026-03-13",
     "expirationDate": "",
     "executionDate": ""
   },
@@ -97,18 +112,16 @@ INFO:__main__:[Pipeline] Schema validation passed
     "jurisdiction": "India preferred",
     "disputeResolution": ""
   },
-  "risks": [],
+  "risks": "- Governing law preference not finalized\n- Liability cap language to be proposed\n- Support SLA expectations during pilot not defined",
   "missingFields": [
     "parties.client.signatories",
     "parties.vendor.signatories",
-    "dates.effectiveDate",
     "dates.expirationDate",
     "dates.executionDate",
     "scope.deliverables",
     "scope.milestones",
     "confidentiality.obligations",
     "legal.disputeResolution",
-    "risks",
     "missingFields",
     "conflicts",
     "provenance",
@@ -148,6 +161,14 @@ INFO:__main__:[Pipeline] Schema validation passed
       "confidence": 0.0
     },
     {
+      "canonicalPath": "dates.effectiveDate",
+      "value": "2026-03-13",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.0
+    },
+    {
       "canonicalPath": "scope.description",
       "value": "Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for downstream systems.",
       "sourceDocumentId": "",
@@ -169,7 +190,7 @@ INFO:__main__:[Pipeline] Schema validation passed
       "sourceDocumentId": "",
       "sourceField": "nda",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.99
+      "confidence": 0.833
     },
     {
       "canonicalPath": "commercials.totalValue",
@@ -209,14 +230,21 @@ INFO:__main__:[Pipeline] Schema validation passed
       "sourceDocumentId": "",
       "sourceField": "nda",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.99
+      "confidence": 0.833
+    },
+    {
+      "canonicalPath": "risks",
+      "value": "- Governing law preference not finalized\n- Liability cap language to be proposed\n- Support SLA expectations during pilot not defined",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.0
     }
   ],
   "review": {
     "status": "needs_review",
     "reviewReason": [
-      "1 field conflict(s) found",
-      "Critical fields missing: ['dates.effectiveDate']"
+      "1 field conflict(s) found"
     ],
     "reviewedBy": "",
     "reviewedAt": ""

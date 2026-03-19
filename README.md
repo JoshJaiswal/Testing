@@ -1,3 +1,7 @@
+Extraction complete — 2 result(s) from handler
+
+=== RAW FIELDS FROM None ===
+
 === RAW FIELDS FROM None ===
 INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'legal.governingLaw' — chose 'deal_intake' over ['nda']
 INFO:__main__:[Pipeline] Merge complete
@@ -20,7 +24,12 @@ INFO:__main__:[Pipeline] Schema validation passed
   },
   "scope": {
     "description": "Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for downstream systems.",
-    "deliverables": [],
+    "deliverables": [
+      ". Configure Content Understanding custom task \\` deal-intake-doc\\` for extracting deal facts from transcripts/notes.",
+      "Integrate extracted JSON output into Contoso's internal workflow tool (REST webhook).",
+      "Provide dashboards for intake volume, missing-field rate, and confidence distribution.",
+      "Knowledge transfer session + admin guide."
+    ],
     "milestones": []
   },
   "confidentiality": {
@@ -38,13 +47,12 @@ INFO:__main__:[Pipeline] Schema validation passed
     "jurisdiction": "India preferred",
     "disputeResolution": ""
   },
-  "risks": "- Governing law preference not finalized\n- Liability cap language to be proposed\n- Support SLA expectations during pilot not confirmed",
+  "risks": "- Governing law preference not confirmed\n- Liability cap language to be proposed",
   "missingFields": [
     "parties.client.signatories",
     "parties.vendor.signatories",
     "dates.expirationDate",
     "dates.executionDate",
-    "scope.deliverables",
     "scope.milestones",
     "confidentiality.obligations",
     "legal.disputeResolution",
@@ -97,6 +105,14 @@ INFO:__main__:[Pipeline] Schema validation passed
     {
       "canonicalPath": "scope.description",
       "value": "Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for downstream systems.",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.0
+    },
+    {
+      "canonicalPath": "scope.deliverables",
+      "value": "['. Configure Content Understanding custom task \\\\` deal-intake-doc\\\\` for extracting deal facts from transcripts/notes.', \"Integrate extracted JSON output into Contoso's internal workflow tool (REST webhook).\", 'Provide dashboards for intake volume, missing-field rate, and confidence distribution.', 'Knowledge transfer session + admin guide.']",
       "sourceDocumentId": "",
       "sourceField": "deal_intake",
       "sourceFamily": "cu_analyzer",
@@ -160,7 +176,7 @@ INFO:__main__:[Pipeline] Schema validation passed
     },
     {
       "canonicalPath": "risks",
-      "value": "- Governing law preference not finalized\n- Liability cap language to be proposed\n- Support SLA expectations during pilot not confirmed",
+      "value": "- Governing law preference not confirmed\n- Liability cap language to be proposed",
       "sourceDocumentId": "",
       "sourceField": "deal_intake",
       "sourceFamily": "cu_analyzer",

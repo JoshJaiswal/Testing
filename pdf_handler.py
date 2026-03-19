@@ -175,6 +175,16 @@ def _extract_derived_fields(extracted: dict) -> dict:
             if "nda" in action and "template" in action and due_date:
                 extracted["ndaTargetExecutionDate"] = due_date
                 break
+
+    # ── Unwrap nested array fields ───────────────────────────────────
+    array_fields = ["inScope", "outOfScope", "nextSteps", 
+                    "participants", "requestedDocuments", "invoiceTriggers"]
+    
+    for field in array_fields:
+        val = extracted.get(field)
+        if isinstance(val, list):
+            extracted[field] = _unwrap_cu_array(val)
+
     return extracted
 
 def _parse_cu_result(result: dict, source_label: str) -> dict:
@@ -237,3 +247,39 @@ def _detect_contract_type(deal_intake_result: dict) -> Literal["nda", "sow", "un
     if has_sow:
         return "sow"
     return "unknown"
+
+def _unwrap_cu_array(raw_array: list) -> list:
+    """
+    Unwrap CU nested array format into a flat list of strings.
+    CU returns arrays as: [{'type': 'object', 'valueObject': {'item': {'valueString': '...'}}}]
+    """
+    result = []
+    for item in raw_array:
+        if not isinstance(item, dict):
+            result.append(str(item))
+            continue
+
+        obj = item.get("valueObject", {})
+
+        # Try common field names CU uses inside array objects
+        for key in ("item", "text", "value", "description", "deliverable"):
+            if key in obj:
+                val = obj[key]
+                text = (
+                    val.get("valueString")
+                    or val.get("content")
+                    or str(val)
+                )
+                if text:
+                    result.append(text)
+                    break
+        else:
+            # Fallback — just grab first string value found
+            for val in obj.values():
+                if isinstance(val, dict):
+                    text = val.get("valueString") or val.get("content")
+                    if text:
+                        result.append(text)
+                        break
+
+    return result

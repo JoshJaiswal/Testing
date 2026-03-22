@@ -30,6 +30,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from orchestration.functions.map_to_canonical import map_to_canonical
 from orchestration.functions.merge_engine import merge_results
+from generation.generate_contract_pdf import generate_pdf
 from normalization.pdf_handler import handle_pdf
 from normalization.docx_handler import handle_docx
 from normalization.email_handler import handle_email
@@ -118,6 +119,8 @@ if __name__ == "__main__":
     parser.add_argument("--type", default="auto", choices=["nda", "sow", "auto"])
     parser.add_argument("--no-blob", action="store_true", help="Skip Blob Storage upload")
     parser.add_argument("--output", help="Save canonical JSON to this file path")
+    parser.add_argument("--generate", action="store_true", help="Generate PDF contract after extraction")
+    parser.add_argument("--output-pdf", help="Path for generated PDF (requires --generate)")
     args = parser.parse_args()
 
     result = run_pipeline(
@@ -134,3 +137,10 @@ if __name__ == "__main__":
         log.info(f"[Pipeline] Output saved to {args.output}")
     else:
         print(json.dumps(result, indent=2))
+
+    # Generate PDF if requested
+    if args.generate:
+        pdf_path = args.output_pdf or args.output.replace(".json", ".pdf")
+        contract_type = args.type if args.type != "auto" else "nda"
+        generate_pdf(result, contract_type, pdf_path)
+        log.info(f"[Pipeline] PDF generated: {pdf_path}")

@@ -83,22 +83,14 @@ def run_pipeline(
 
     log.info(f"[Pipeline] Starting — file={path.name}, type={contract_type}")
 
+    
     # ── Step 1: Route to modality handler ────────────────────────────────────
-    # Each handler returns a list of raw extracted dicts (one per analyzer run)
-    handler = MODALITY_ROUTER[ext]
-    raw_results: list[dict] = handler(
-        file_path=str(path),
-        contract_type=contract_type,
-        upload_to_blob=upload_to_blob,
-    )
+    handler = MODALITY_ROUTER[ext] 
+    raw_results: list[dict] = handler( 
+        file_path=str(path), 
+        contract_type=contract_type, 
+        upload_to_blob=upload_to_blob, ) 
     log.info(f"[Pipeline] Extraction complete — {len(raw_results)} result(s) from handler")
-
-    raw_results: list[dict] = handler( file_path=str(path), contract_type=contract_type, upload_to_blob=upload_to_blob, )
-    for r in raw_results: 
-        print(f"\n=== RAW FIELDS FROM {r.get('source')} ===") 
-        for k, v in r.items(): 
-            if not k.startswith('_'): 
-                print(f" {k}: {v}")
 
     # ── Step 2: Map each result to canonical schema fields ───────────────────
     canonical_candidates: list[dict] = []
@@ -120,13 +112,12 @@ def run_pipeline(
 
     return merged_package
 
-
-# ── CLI entrypoint ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Contract Processing Pipeline")
     parser.add_argument("--input", required=True, help="Path to input file")
     parser.add_argument("--type", default="auto", choices=["nda", "sow", "auto"])
     parser.add_argument("--no-blob", action="store_true", help="Skip Blob Storage upload")
+    parser.add_argument("--output", help="Save canonical JSON to this file path")
     args = parser.parse_args()
 
     result = run_pipeline(
@@ -134,4 +125,12 @@ if __name__ == "__main__":
         contract_type=args.type,
         upload_to_blob=not args.no_blob,
     )
-    print(json.dumps(result, indent=2))
+
+    if args.output:
+        from pathlib import Path
+        Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+        with open(args.output, "w") as f:
+            json.dump(result, f, indent=2)
+        log.info(f"[Pipeline] Output saved to {args.output}")
+    else:
+        print(json.dumps(result, indent=2))

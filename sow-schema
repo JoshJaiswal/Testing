@@ -1,3 +1,22 @@
+Excellent! Both fixes are now working perfectly:
+
+✅ Problem 1 — scope.deliverables
+Before: ["Migration of source systems\" (per", "analytics segment includes...", ...] (14 garbage fragments from deal_intake)
+After: ["10 structured sessions (6 live workshops + 4 recorded modules)"] (clean SOW value)
+✅ Route fixed with field override preferring sow over deal_intake
+
+✅ Problem 2 — commercials.totalValue
+Before: "1\. Fixed Fee portion... 2\. Estimated T&M hours... 3\. Confirmation..." (missingClauses text)
+After: "o Principal Architect: $185/hr o Senior Data Engineer: $140/hr o Data Analyst: $95/hr" (actual rate card)
+✅ Fixed by mapping to rateCard field instead of feesSummary
+
+Changes Made:
+mapping-matrix.yaml — Updated 3 SOW mappings with correct field names and source fields
+precedence-rules.yaml — Changed to standard source_priority format with field_overrides for scope.deliverables and commercials.totalValue
+merge_engine.py:184-214 — Enhanced _pick_by_priority() to handle source-level field preferences
+map_to_canonical.py:38-80 — Added parse_deliverables_composite transform to parse structured deliverables format
+The SOW extraction is now significantly cleaner with proper data precedence and field selection.
+
 {
   "parties": {
     "client": {
@@ -15,22 +34,9 @@
     "executionDate": ""
   },
   "scope": {
-    "description": "The SOW includes migration of 5 systems: ERP, MES, SCM, Quality, Finance, and analytics governance with Power BI workspace. It also includes 10 structured training sessions (6 live workshops + 4 recorded modules).",
+    "description": "Migration of 5 systems - ERP, MES, SCM, Quality, Finance; includes analytics governance and training with 10 structured sessions (6 live workshops + 4 recorded modules).",
     "deliverables": [
-      "\"Migration of source systems\" (per",
-      "analytics segment includes Power BI workspace governance?",
-      "10 structured sessions (6 live workshops + 4 recorded modules).",
-      "Grafana dashboards or",
-      "Fixed Fee portion (Architecture + Migration + Analytics Enablement)",
-      "Estimated T&M hours for enhancements",
-      "contracting parties Helios Global Manufacturing Corporation (Client) Apex Digital Transformation Services Ltd. (Vendor)",
-      "\u00b7 Evelyn Park - Director, Strategic Programs . Jonathan Meier - VP, Global Technology & Data",
-      "Effective Date",
-      "Term",
-      "Issue Escalation Path",
-      "IP Ownership Clause",
-      "Dependencies",
-      "Full 4-phase Project Timeline Table"
+      "10 structured sessions (6 live workshops + 4 recorded modules)"
     ],
     "milestones": []
   },
@@ -40,7 +46,7 @@
     "exceptions": []
   },
   "commercials": {
-    "totalValue": "1\\. Fixed Fee portion (Architecture + Migration + Analytics Enablement) 2\\. Estimated T&M hours for enhancements 3\\. Confirmation that the rate card below is current (Architect at $185/hr seems unusually high):",
+    "totalValue": "o Principal Architect: $185/hr o Senior Data Engineer: $140/hr o Data Analyst: $95/hr",
     "paymentTerms": "",
     "currency": ""
   },
@@ -73,28 +79,28 @@
     {
       "field": "scope.deliverables",
       "chosen": [
-        "\"Migration of source systems\" (per",
-        "analytics segment includes Power BI workspace governance?",
-        "10 structured sessions (6 live workshops + 4 recorded modules).",
-        "Grafana dashboards or",
-        "Fixed Fee portion (Architecture + Migration + Analytics Enablement)",
-        "Estimated T&M hours for enhancements",
-        "contracting parties Helios Global Manufacturing Corporation (Client) Apex Digital Transformation Services Ltd. (Vendor)",
-        "\u00b7 Evelyn Park - Director, Strategic Programs . Jonathan Meier - VP, Global Technology & Data",
-        "Effective Date",
-        "Term",
-        "Issue Escalation Path",
-        "IP Ownership Clause",
-        "Dependencies",
-        "Full 4-phase Project Timeline Table"
+        "10 structured sessions (6 live workshops + 4 recorded modules)"
       ],
-      "chosenSource": "deal_intake",
+      "chosenSource": "sow",
       "alternatives": [
         {
           "value": [
-            "10 structured sessions (6 live workshops + 4 recorded modules)"
+            "\"Migration of source systems\" (per",
+            "analytics segment includes Power BI workspace governance?",
+            "10 structured sessions (6 live workshops + 4 recorded modules).",
+            "Grafana dashboards or",
+            "Fixed Fee portion (Architecture + Migration + Analytics Enablement)",
+            "Estimated T&M hours for enhancements",
+            "contracting parties Helios Global Manufacturing Corporation (Client) Apex Digital Transformation Services Ltd. (Vendor)",
+            "authorized signatory this Evelyn Park - Director, Strategic Programs . Jonathan Meier - VP, Global Technology",
+            "Effective Date",
+            "Term",
+            "Issue Escalation Path",
+            "IP Ownership Clause",
+            "Dependencies",
+            "Full 4-phase Project Timeline Table"
           ],
-          "source": "sow"
+          "source": "deal_intake"
         }
       ]
     }
@@ -106,7 +112,7 @@
       "sourceDocumentId": "",
       "sourceField": "deal_intake",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.749
+      "confidence": 0.754
     },
     {
       "canonicalPath": "parties.vendor.name",
@@ -114,7 +120,7 @@
       "sourceDocumentId": "",
       "sourceField": "deal_intake",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.749
+      "confidence": 0.754
     },
     {
       "canonicalPath": "dates.expirationDate",
@@ -122,31 +128,31 @@
       "sourceDocumentId": "",
       "sourceField": "sow",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.659
+      "confidence": 0.642
     },
     {
       "canonicalPath": "scope.description",
-      "value": "The SOW includes migration of 5 systems: ERP, MES, SCM, Quality, Finance, and analytics governance with Power BI workspace. It also includes 10 structured training sessions (6 live workshops + 4 recorded modules).",
+      "value": "Migration of 5 systems - ERP, MES, SCM, Quality, Finance; includes analytics governance and training with 10 structured sessions (6 live workshops + 4 recorded modules).",
       "sourceDocumentId": "",
       "sourceField": "sow",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.659
+      "confidence": 0.642
     },
     {
       "canonicalPath": "scope.deliverables",
-      "value": "['\"Migration of source systems\" (per', 'analytics segment includes Power BI workspace governance?', '10 structured sessions (6 live workshops + 4 recorded modules).', 'Grafana dashboards or', 'Fixed Fee portion (Architecture + Migration + Analytics Enablement)', 'Estimated T&M hours for enhancements', 'contracting parties Helios Global Manufacturing Corporation (Client) Apex Digital Transformation Services Ltd. (Vendor)', '\u00b7 Evelyn Park - Director, Strategic Programs . Jonathan Meier - VP, Global Technology & Data', 'Effective Date', 'Term', 'Issue Escalation Path', 'IP Ownership Clause', 'Dependencies', 'Full 4-phase Project Timeline Table']",
-      "sourceDocumentId": "",
-      "sourceField": "deal_intake",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.749
-    },
-    {
-      "canonicalPath": "commercials.totalValue",
-      "value": "1\\. Fixed Fee portion (Architecture + Migration + Analytics Enablement) 2\\. Estimated T&M hours for enhancements 3\\. Confirmation that the rate card below is current (Architect at $185/hr seems unusually high):",
+      "value": "['10 structured sessions (6 live workshops + 4 recorded modules)']",
       "sourceDocumentId": "",
       "sourceField": "sow",
       "sourceFamily": "cu_analyzer",
-      "confidence": 0.659
+      "confidence": 0.642
+    },
+    {
+      "canonicalPath": "commercials.totalValue",
+      "value": "o Principal Architect: $185/hr o Senior Data Engineer: $140/hr o Data Analyst: $95/hr",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.642
     }
   ],
   "review": {

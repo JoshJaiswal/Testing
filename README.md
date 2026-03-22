@@ -1,3 +1,21 @@
+python orchestration/functions/run_pipeline.py --input tests/fixtures/deal-intake-sample-structured.pdf --type nda --no-blob
+INFO:__main__:[Pipeline] Starting — file=deal-intake-sample-structured.pdf, type=nda
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\deal-intake-sample-structured.pdf
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to core-deal-intake-analyzer
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] In progress... (10s)
+INFO:normalization.pdf_handler:[CU] In progress... (14s)
+INFO:normalization.pdf_handler:[CU] In progress... (18s)
+INFO:normalization.pdf_handler:[CU] Completed in 21.1s
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to nda-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (4s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] Completed in 10.9s
+INFO:__main__:[Pipeline] Extraction complete — 2 result(s) from handler
+
 === RAW FIELDS FROM None ===
 
 === RAW FIELDS FROM None ===
@@ -269,13 +287,41 @@ INFO:normalization.pdf_handler:[CU] In progress... (0s)
 INFO:normalization.pdf_handler:[CU] In progress... (3s)
 INFO:normalization.pdf_handler:[CU] In progress... (6s)
 INFO:normalization.pdf_handler:[CU] In progress... (10s)
-INFO:normalization.pdf_handler:[CU] In progress... (13s)
-INFO:normalization.pdf_handler:[CU] In progress... (16s)
-INFO:normalization.pdf_handler:[CU] Completed in 19.0s
-INFO:normalization.pdf_handler:[CU] sow done — _source=sow, confidence=0.683
-INFO:__main__:[Pipeline] Extraction complete — 3 result(s) from handler
-WARNING:orchestration.functions.map_to_canonical:[Mapper] No mapping found for source 'sow' analyzer 'sow-analyzer-extractor-02' — passing through raw
+ctor-02' — passing through raw
 INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'legal.governingLaw' — chose 'deal_intake' over ['nda']
+INFO:__main__:[Pipeline] Merge complete
+INFO:__main__:[Pipeline] Schema validation passed             python orchestration/functions/run_pipeline.py --input tests/fixtures/deal-intake-sample-structured.pdf --type auto --no-blob --output tests/output/canonical-result.json\DZ975HB\Documents\contract-intelligence-platform>
+INFO:__main__:[Pipeline] Starting — file=deal-intake-sample-structured.pdf, type=auto
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\deal-intake-sample-structured.pdf
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to core-deal-intake-analyzer-02
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] In progress... (10s)
+INFO:normalization.pdf_handler:[CU] In progress... (13s)
+INFO:normalization.pdf_handler:[CU] In progress... (17s)
+INFO:normalization.pdf_handler:[CU] In progress... (20s)
+INFO:normalization.pdf_handler:[CU] Completed in 23.4s
+INFO:normalization.pdf_handler:[CU] deal_intake done — _source=deal_intake, confidence=0.811
+INFO:normalization.pdf_handler:[PDF Handler] Detected type: both
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to nda-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] Completed in 9.9s
+INFO:normalization.pdf_handler:[CU] nda done — _source=nda, confidence=0.84
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to sow-analyzer-extractor-02
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (4s)
+INFO:normalization.pdf_handler:[CU] In progress... (7s)
+INFO:normalization.pdf_handler:[CU] In progress... (10s)
+INFO:normalization.pdf_handler:[CU] In progress... (14s)
+INFO:normalization.pdf_handler:[CU] Completed in 17.3s
+INFO:normalization.pdf_handler:[CU] sow done — _source=sow, confidence=0.69
+INFO:__main__:[Pipeline] Extraction complete — 3 result(s) from handler
+INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'parties.client.name' — chose 'deal_intake' over ['nda', 'sow']
+INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'commercials.paymentTerms' — chose 'deal_intake' over ['sow']
+INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'legal.governingLaw' — chose 'deal_intake' over ['nda', 'sow']
 INFO:__main__:[Pipeline] Merge complete
 INFO:__main__:[Pipeline] Schema validation passed
 INFO:__main__:[Pipeline] Output saved to tests/output/canonical-result.json

@@ -1,5 +1,3 @@
-Extraction complete — 2 result(s) from handler
-
 === RAW FIELDS FROM None ===
 
 === RAW FIELDS FROM None ===
@@ -178,7 +176,6 @@ INFO:__main__:[Pipeline] Schema validation passed
       "canonicalPath": "risks",
       "value": "- Governing law preference not confirmed\n- Liability cap language to be proposed",
       "sourceDocumentId": "",
-      "sourceField": "deal_intake",
       "sourceFamily": "cu_analyzer",
       "confidence": 0.0
     }
@@ -190,5 +187,38 @@ INFO:__main__:[Pipeline] Schema validation passed
     ],
     "reviewedBy": "",
     "reviewedAt": ""
-  }
-}
+ntake-sample-structured.pdf --type auto --no-blob --output tests/output/canonical-result.json
+INFO:__main__:[Pipeline] Starting — file=deal-intake-sample-structured.pdf, type=auto
+INFO:normalization.pdf_handler:[PDF Handler] Processing: tests\fixtures\deal-intake-sample-structured.pdf
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to core-deal-intake-analyzer
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (6s)
+INFO:normalization.pdf_handler:[CU] In progress... (9s)
+INFO:normalization.pdf_handler:[CU] In progress... (13s)
+INFO:normalization.pdf_handler:[CU] In progress... (16s)
+INFO:normalization.pdf_handler:[CU] In progress... (19s)
+INFO:normalization.pdf_handler:[CU] Completed in 22.3s
+INFO:normalization.pdf_handler:[CU] deal_intake done — _source=deal_intake, confidence=0.0
+INFO:normalization.pdf_handler:[PDF Handler] Detected type: both
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to nda-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (6s)
+INFO:normalization.pdf_handler:[CU] Completed in 9.2s
+INFO:normalization.pdf_handler:[CU] nda done — _source=nda, confidence=0.837
+INFO:normalization.pdf_handler:[CU] Submitted tests\fixtures\deal-intake-sample-structured.pdf to sow-analyzer-extractor
+INFO:normalization.pdf_handler:[CU] In progress... (0s)
+INFO:normalization.pdf_handler:[CU] In progress... (3s)
+INFO:normalization.pdf_handler:[CU] In progress... (6s)
+INFO:normalization.pdf_handler:[CU] In progress... (9s)
+INFO:normalization.pdf_handler:[CU] In progress... (12s)
+INFO:normalization.pdf_handler:[CU] In progress... (15s)
+INFO:normalization.pdf_handler:[CU] Completed in 18.3s
+INFO:normalization.pdf_handler:[CU] sow done — _source=sow, confidence=0.0
+INFO:__main__:[Pipeline] Extraction complete — 3 result(s) from handler
+WARNING:orchestration.functions.map_to_canonical:[Mapper] No mapping found for source 'sow' analyzer 'sow-analyzer-extractor' — passing through raw
+INFO:orchestration.functions.merge_engine:[Merge] Conflict on 'legal.governingLaw' — chose 'deal_intake' over ['nda']
+INFO:__main__:[Pipeline] Merge complete
+INFO:__main__:[Pipeline] Schema validation passed
+INFO:__main__:[Pipeline] Output saved to tests/output/canonical-result.json

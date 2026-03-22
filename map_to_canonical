@@ -1,0 +1,224 @@
+"""
+map_to_canonical.py
+────────────────────
+Translates raw analyzer output (from CU or LLM) into the
+canonical schema structure defined in contract-package.schema.json.
+
+Uses mapping-matrix.yaml as the translation ruleset.
+
+The mapping matrix format (mapping-matrix.yaml) should look like:
+    mappings:
+      deal_intake:
+        clientName:      parties.client.name
+        vendorName:      parties.vendor.name
+        startDate:       dates.effectiveDate
+        endDate:         dates.expirationDate
+        dealValue:       commercials.totalValue
+      nda:
+        confidentialityTerm:  confidentiality.term
+        governingLaw:         legal.governingLaw
+        obligations:          confidentiality.obligations
+        exceptions:           confidentiality.exceptions
+      sow:
+        scopeOfWork:     scope.description
+        deliverables:    scope.deliverables
+        milestones:      scope.milestones
+        paymentTerms:    commercials.paymentTerms
+"""
+
+import yaml
+import logging
+from pathlib import Path
+from typing import Any
+
+log = logging.getLogger(__name__)
+
+# Path to mapping-matrix.yaml (relative to project root)
+MAPPING_MATRIX_PATH = Path(__file__).parent.parent.parent / "canonical" / "mapping-matrix.yaml"
+
+
+def apply_transform(value: Any, transform: str) -> Any:
+    """
+    Apply transformation rules to extracted values.
+    Supports: as_is, parse_party_client, parse_party_vendor, parse_deliverables_composite
+    """
+    if transform == "as_is" or not transform:
+        return value
+    
+    if transform == "parse_party_client":
+        # Extract PARTY where ROLE::client from structured party format
+        # Format: PARTY::Name | ROLE::client || PARTY::Vendor | ROLE::vendor
+        for segment in str(value).split("||"):
+            if "ROLE::client" in segment:
+                for part in segment.split("|"):
+                    if part.strip().startswith("PARTY::"):
+                        return part.strip().replace("PARTY::", "").strip()
+        return value
+
+    if transform == "parse_party_vendor":
+        # Extract PARTY where ROLE::vendor from structured party format
+        for segment in str(value).split("||"):
+            if "ROLE::vendor" in segment:
+                for part in segment.split("|"):
+                    if part.strip().startswith("PARTY::"):
+                        return part.strip().replace("PARTY::", "").strip()
+        return value
+    
+    if transform == "parse_deliverables_composite":
+        # Parse SOW deliverablesComposite structured format
+        # Format: DELIV::item1 \n DESC::desc1 \n DUE::date \n ACCEPT::criteria
+        # Extract just the DELIV part and return as list
+        if isinstance(value, str):
+            items = []
+            for line in value.split("\n"):
+                if line.strip().startswith("DELIV::"):
+                    deliv = line.strip().replace("DELIV::", "").strip()
+                    if deliv and deliv.lower() != "null":
+                        items.append(deliv)
+            return items if items else value
+        return value
+    
+    return value
+
+
+def load_mapping_matrix() -> dict:
+    """Load and parse the mapping-matrix.yaml file."""
+    # TODO: Add caching so this isn't re-read on every call
+    with open(MAPPING_MATRIX_PATH, "r") as f:
+        matrix = yaml.safe_load(f)
+
+    return matrix
+
+
+def set_nested(target: dict, dotted_key: str, value: Any) -> None:
+    """
+    Write a value into a nested dict using a dot-notation key.
+    e.g. set_nested(d, "parties.client.name", "Acme Corp")
+         → d["parties"]["client"]["name"] = "Acme Corp"
+    """
+    keys = dotted_key.split(".")
+    cursor = target
+    for key in keys[:-1]:
+        cursor = cursor.setdefault(key, {})
+    cursor[keys[-1]] = value
+
+
+def get_nested(source: dict, dotted_key: str, default=None) -> Any:
+    """
+    Read a value from a nested dict using dot-notation key.
+    Returns default if any key in the chain is missing.
+    """
+    keys = dotted_key.split(".")
+    cursor = source
+    for key in keys:
+        if not isinstance(cursor, dict) or key not in cursor:
+            return default
+        cursor = cursor[key]
+    return cursor
+
+
+def map_to_canonical(raw_result: dict) -> dict:
+    """
+    Apply the mapping matrix to translate raw analyzer output
+    into a canonical schema-conformant dict.
+
+    Args:
+        raw_result: Raw extraction dict. Must contain a "_source" key
+                    indicating which analyzer produced it.
+
+    Returns:
+        A partial canonical package dict with only the fields
+        this analyzer is responsible for populated. Includes "_rule_precedence"
+        metadata mapping each canonical path to its rule precedence value.
+    """
+    matrix = load_mapping_matrix()
+    source = raw_result.get("_source") or raw_result.get("_analyzerUsed", "unknown")
+    analyzer_used = raw_result.get("_analyzerUsed")
+    
+    mappings = matrix.get("mappings", [])
+    if not isinstance(mappings, list):
+        log.warning("[Mapper] Unexpected mapping format. Expected list, got %s", type(mappings))
+        return {"_raw": raw_result, "_source": source, "_mapped": False}
+
+    canonical = {
+        "_source": source,
+        "_mapped": True,
+        "_confidence": raw_result.get("_confidence", 0.0),
+        "_rule_precedence": {},  # Track rule precedence for each field
+    }
+
+    # Filter rules by source analyzer
+    for rule in mappings:
+        rule_source = rule.get("sourceAnalyzer")
+        if rule_source != source:
+            continue
+        
+        source_field = rule.get("sourceField")
+        canonical_path = rule.get("canonicalPath")
+        transform = rule.get("transform", "as_is")
+        precedence = rule.get("precedence", 0)
+        
+        if not source_field or not canonical_path:
+            continue
+        
+        value = raw_result.get(source_field)
+        if value is None:
+            continue
+        
+        # Apply transformation
+        value = apply_transform(value, transform)
+        
+        set_nested(canonical, canonical_path, value)
+        canonical["_rule_precedence"][canonical_path] = precedence
+        log.debug(f"[Mapper] {source_field} → {canonical_path} = {value!r} (precedence: {precedence})")
+
+    return canonical
+
+
+def build_empty_canonical() -> dict:
+    """
+    Return a fully-structured empty canonical package.
+    Matches contract-package.schema.json structure.
+    Used as the base dict that merge_engine populates.
+    """
+    return {
+        "parties": {
+            "client": {"name": "", "signatories": []},
+            "vendor": {"name": "", "signatories": []},
+        },
+        "dates": {
+            "effectiveDate": "",
+            "expirationDate": "",
+            "executionDate": "",
+        },
+        "scope": {
+            "description": "",
+            "deliverables": [],
+            "milestones": [],
+        },
+        "confidentiality": {
+            "term": "",
+            "obligations": [],
+            "exceptions": [],
+        },
+        "commercials": {
+            "totalValue": "",
+            "paymentTerms": "",
+            "currency": "",
+        },
+        "legal": {
+            "governingLaw": "",
+            "jurisdiction": "",
+            "disputeResolution": "",
+        },
+        "risks": [],
+        "missingFields": [],
+        "conflicts": [],
+        "provenance": [],
+        "review": {
+            "status": "needs_review",
+            "reviewReason": [],
+            "reviewedBy": "",
+            "reviewedAt": "",
+        },
+    }

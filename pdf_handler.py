@@ -110,7 +110,7 @@ class AzureContentUnderstandingClient:
 
 def handle_pdf(
     file_path: str,
-    contract_type: Literal["nda", "sow", "auto"] = "auto",
+    contract_type: Literal["nda", "sow", "both", "auto"] = "auto",
     upload_to_blob: bool = True,
 ) -> list[dict]:
     """
@@ -146,19 +146,41 @@ def handle_pdf(
         contract_type = _detect_contract_type(deal_result)
         log.info(f"[PDF Handler] Detected type: {contract_type}")
 
-    # Run domain analyzer
-    if contract_type in ("nda", "sow"):
-        domain_result = run_cu_analyzer(client, CU_ANALYZER_IDS[contract_type], file_location, contract_type)
-        results.append(domain_result)
+    # Run NDA analyzer if needed
+    if contract_type in ("nda", "both"):
+        nda_result = run_cu_analyzer(
+            client, CU_ANALYZER_IDS["nda"], file_location, "nda"
+        )
+        results.append(nda_result)
+
+    # Run SOW analyzer if needed
+    if contract_type in ("sow", "both"):
+        sow_result = run_cu_analyzer(
+            client, CU_ANALYZER_IDS["sow"], file_location, "sow"
+        )
+        results.append(sow_result)
 
     return results
 
 def run_cu_analyzer(client, analyzer_id: str, file_location: str, source_label: str) -> dict:
-    response = client.begin_analyze(analyzer_id, file_location)
-    result = client.poll_result(response)
-    extracted = _parse_cu_result(result, source_label)
-    extracted["_source"] = source_label  
+    try:
+        response = client.begin_analyze(analyzer_id, file_location)
+        result = client.poll_result(response)
+    except Exception as e:
+        log.error(f"[CU] API call failed for {source_label}: {e}")
+        return {"_source": source_label, "_analyzerUsed": analyzer_id, "_error": str(e), "_confidence": 0.0}
+
+    try:
+        extracted = _parse_cu_result(result, source_label)
+    except Exception as e:
+        log.error(f"[CU] Parse failed for {source_label}: {e}")
+        import traceback
+        traceback.print_exc()
+        extracted = {"_parseError": str(e), "_confidence": 0.0}
+
+    extracted["_source"] = source_label
     extracted["_analyzerUsed"] = analyzer_id
+    log.info(f"[CU] {source_label} done — _source={extracted.get('_source')}, confidence={extracted.get('_confidence')}")
     return extracted
 
 def _extract_derived_fields(extracted: dict) -> dict:
@@ -232,16 +254,15 @@ def _parse_cu_result(result: dict, source_label: str) -> dict:
     extracted = _extract_derived_fields(extracted)
     return extracted
 
-def _detect_contract_type(deal_intake_result: dict) -> Literal["nda", "sow", "unknown"]:
-    # Check requestedDocumentTypes field from your deal-intake analyzer
+def _detect_contract_type(deal_intake_result: dict) -> Literal["nda", "sow", "both", "unknown"]:
     doc_types = str(deal_intake_result.get("requestedDocumentTypes", "")).lower()
     nda_required = str(deal_intake_result.get("ndaRequired", "")).lower()
-    
+
     has_nda = "nda" in doc_types or nda_required == "yes"
     has_sow = "sow" in doc_types
 
     if has_nda and has_sow:
-        return "nda"  # run NDA first, SOW handled separately
+        return "both"
     if has_nda:
         return "nda"
     if has_sow:

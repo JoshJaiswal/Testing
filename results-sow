@@ -1,143 +1,150 @@
-{
-  "parties": {
-    "client": {
-      "name": "Helios Global Manufacturing Corporation",
-      "signatories": []
-    },
-    "vendor": {
-      "name": "Apex Digital Transformation Services Ltd.",
-      "signatories": []
-    }
-  },
-  "dates": {
-    "effectiveDate": "",
-    "expirationDate": "\"Valid until Sept 30, 2026 unless extended\")",
-    "executionDate": ""
-  },
-  "scope": {
-    "description": "The project involves migration of 5 systems (ERP, MES, SCM, Quality, Finance) and includes analytics governance with Power BI workspace. It also includes 10 structured training sessions (6 live workshops + 4 recorded modules).",
-    "deliverables": [
-      "\"Migration of source systems\" (per",
-      "analytics segment includes Power BI workspace governance?",
-      "10 structured sessions (6 live workshops + 4 recorded modules).",
-      "Grafana dashboards or"
-    ],
-    "milestones": []
-  },
-  "confidentiality": {
-    "term": "",
-    "obligations": [],
-    "exceptions": []
-  },
-  "commercials": {
-    "totalValue": "",
-    "paymentTerms": "",
-    "currency": ""
-  },
-  "legal": {
-    "governingLaw": "",
-    "jurisdiction": "",
-    "disputeResolution": ""
-  },
-  "risks": [],
-  "missingFields": [
-    "parties.client.signatories",
-    "parties.vendor.signatories",
-    "dates.effectiveDate",
-    "dates.executionDate",
-    "scope.milestones",
-    "confidentiality.term",
-    "confidentiality.obligations",
-    "confidentiality.exceptions",
-    "commercials.totalValue",
-    "commercials.paymentTerms",
-    "commercials.currency",
-    "legal.governingLaw",
-    "legal.jurisdiction",
-    "legal.disputeResolution",
-    "review.status",
-    "review.reviewReason",
-    "review.reviewedBy",
-    "review.reviewedAt"
-  ],
-  "conflicts": [
-    {
-      "field": "parties.client.name",
-      "chosen": "Helios Global Manufacturing Corporation",
-      "chosenSource": "deal_intake",
-      "alternatives": [
-        {
-          "value": "PARTY::Helios Global Manufacturing Corporation | ROLE::client || PARTY::Apex Digital Transformation Services Ltd. | ROLE::vendor",
-          "source": "sow"
-        }
-      ]
-    },
-    {
-      "field": "scope.deliverables",
-      "chosen": [
-        "\"Migration of source systems\" (per",
-        "analytics segment includes Power BI workspace governance?",
-        "10 structured sessions (6 live workshops + 4 recorded modules).",
-        "Grafana dashboards or"
-      ],
-      "chosenSource": "deal_intake",
-      "alternatives": [
-        {
-          "value": "10 structured sessions (6 live workshops + 4 recorded modules)",
-          "source": "sow"
-        }
-      ]
-    }
-  ],
-  "provenance": [
-    {
-      "canonicalPath": "parties.client.name",
-      "value": "Helios Global Manufacturing Corporation",
-      "sourceDocumentId": "",
-      "sourceField": "deal_intake",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.754
-    },
-    {
-      "canonicalPath": "parties.vendor.name",
-      "value": "Apex Digital Transformation Services Ltd.",
-      "sourceDocumentId": "",
-      "sourceField": "deal_intake",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.754
-    },
-    {
-      "canonicalPath": "dates.expirationDate",
-      "value": "\"Valid until Sept 30, 2026 unless extended\")",
-      "sourceDocumentId": "",
-      "sourceField": "sow",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.653
-    },
-    {
-      "canonicalPath": "scope.description",
-      "value": "The project involves migration of 5 systems (ERP, MES, SCM, Quality, Finance) and includes analytics governance with Power BI workspace. It also includes 10 structured training sessions (6 live workshops + 4 recorded modules).",
-      "sourceDocumentId": "",
-      "sourceField": "sow",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.653
-    },
-    {
-      "canonicalPath": "scope.deliverables",
-      "value": "['\"Migration of source systems\" (per', 'analytics segment includes Power BI workspace governance?', '10 structured sessions (6 live workshops + 4 recorded modules).', 'Grafana dashboards or']",
-      "sourceDocumentId": "",
-      "sourceField": "deal_intake",
-      "sourceFamily": "cu_analyzer",
-      "confidence": 0.754
-    }
-  ],
-  "review": {
-    "status": "needs_review",
-    "reviewReason": [
-      "2 field conflict(s) found",
-      "Critical fields missing: ['dates.effectiveDate']"
-    ],
-    "reviewedBy": "",
-    "reviewedAt": ""
-  }
-}
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd.
+STATEMENT OF WORK
+Contoso India Pvt. Ltd.
+×
+Fabrikam Solutions Pvt. Ltd.
+Effective Date: 2026-03-13    ·    Generated: 2026-03-22 20:53 UTC
+  REQUIRES REVIEW BEFORE USE
+CONFIDENTIAL  ·  AI-ASSISTED DRAFT  ·  NOT LEGAL ADVICE  ·  NOT EXECUTED
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice
+CONFIDENTIAL  ·  Page 1
+Review Status: NEEDS_REVIEW
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd. CONFIDENTIAL  ·  Page 2
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice Review Status: NEEDS_REVIEW
+ REQUIRES HUMAN REVIEW BEFORE USE
+2 field conflict(s) found
+1. CONTRACTING PARTIES & DATES
+Client Contoso India Pvt. Ltd.
+Vendor / Supplier Fabrikam Solutions Pvt. Ltd.
+Effective Date 2026-03-13
+Term / Expiry —
+Execution Date —
+2. SCOPE OF WORK
+Project Summary
+Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for
+downstream systems.
+2.1 Deliverables
+• . Configure Content Understanding custom task \` deal-intake-doc\` for extracting deal facts from
+transcripts/notes.
+• Integrate extracted JSON output into Contoso's internal workflow tool (REST webhook).
+• Provide dashboards for intake volume, missing-field rate, and confidence distribution.
+• Knowledge transfer session + admin guide.
+2.2 Milestones
+• Target NDA execution: 2026-03-18 Pilot kickoff: 2026-03-24 Pilot duration: 12 weeks Weekly status calls;
+mid-pilot checkpoint at week 6
+3. COMMERCIAL TERMS
+Total / Fee Structure 1800000
+Payment Terms 50% on kickoff, 50% on completion
+Currency INR
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd.
+4. LEGAL & JURISDICTION
+CONFIDENTIAL  ·  Page 3
+Governing Law
+Jurisdiction
+Tamil Nadu / India
+India preferred
+Dispute Resolution
+—
+5. STANDARD PROVISIONS
+5.1 Change Control
+Any change to the scope, timeline, or fees must be agreed in writing via a Change Request signed by authorised
+representatives of both parties prior to implementation.
+5.2 Acceptance
+Each deliverable shall be subject to a written acceptance period of 10 business days. Silence shall not constitute
+acceptance. The Client shall provide written acceptance or a detailed list of defects within the acceptance period.
+5.3 Intellectual Property
+Unless otherwise agreed in writing, all work product created by the Vendor under this SOW shall be owned by the
+Client upon full payment of all fees. Pre-existing IP of either party is not transferred.
+5.4 Limitation of Liability
+Neither party shall be liable for indirect, incidental, or consequential damages. Each party's aggregate liability under
+this SOW shall not exceed the total fees paid or payable in the preceding twelve months.
+5.5 Termination for Convenience
+Either party may terminate this SOW with 30 days written notice. Upon termination the Client shall pay for all work
+completed to the date of termination on a pro-rata basis.
+5.6 Confidentiality
+Each party shall treat all non-public information received from the other party as confidential and shall not disclose it
+to any third party without prior written consent, for the duration of this SOW and for two years thereafter.
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice
+Review Status: NEEDS_REVIEW
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd.
+EXECUTION & SIGNATURES
+CONFIDENTIAL  ·  Page 4
+IN WITNESS WHEREOF the parties have executed this Agreement as of the Effective Date first written above.
+Contoso India Pvt. Ltd.
+Signature: ___________________________
+Name: _______________________________
+Title: _______________________________
+Date: _______________________________
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice
+Fabrikam Solutions Pvt. Ltd.
+Signature: ___________________________
+Name: _______________________________
+Title: _______________________________
+Date: _______________________________
+Review Status: NEEDS_REVIEW
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd. CONFIDENTIAL  ·  Page 5
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice Review Status: NEEDS_REVIEW
+APPENDIX A — PIPELINE METADATA
+This appendix is generated automatically by the contract intelligence pipeline. It documents the AI extraction
+process for audit and review purposes and forms no part of the contractual terms above.
+Missing Fields
+• parties.client.signatories
+• parties.vendor.signatories
+• dates.expirationDate
+• dates.executionDate
+• confidentiality.obligations
+• legal.disputeResolution
+• review.status
+• review.reviewReason
+• review.reviewedBy
+• review.reviewedAt
+CONFLICT RESOLUTION LOG
+Field Chosen Value Source Overridden
+commercials.paymentTer
+ms
+50% on kickoff, 50% on completion deal_intake sow: Net 30 Invoicing: 50% on
+kickoff, 50% on
+legal.governingLaw Tamil Nadu / India deal_intake nda: Prefer Tamil Nadu / India; sow:
+Prefer Tamil Nadu / India
+PROVENANCE AUDIT TRAIL
+Canonical Field Extracted Value Source Analyzer Confidence
+parties.client.name Contoso India Pvt. Ltd. deal_intake 80%
+parties.vendor.name Fabrikam Solutions Pvt. Ltd. deal_intake 80%
+dates.effectiveDate 2026-03-13 deal_intake 80%
+scope.description Deploy a pilot for extracting key fields from
+procurement documents and gener...
+deal_intake 80%
+scope.deliverables ['. Configure Content Understanding custom
+task \\` deal-intake-doc\\` for ex...
+deal_intake 80%
+scope.milestones ['Target NDA execution: 2026-03-18 Pilot
+kickoff: 2026-03-24 Pilot duration: ...
+sow 65%
+confidentiality.term 3 deal_intake 80%
+confidentiality.exceptions Standard (public info, independently
+developed, required disclosure)
+nda 84%
+SOW  ·  Contoso India Pvt. Ltd.  ×  Fabrikam Solutions Pvt. Ltd.
+commercials.totalValue
+commercials.paymentTerms
+1800000
+50% on kickoff, 50% on completion
+CONFIDENTIAL  ·  Page 6
+deal_intake
+80%
+deal_intake
+commercials.currency
+legal.governingLaw
+INR
+Tamil Nadu / India
+deal_intake
+80%
+80%
+deal_intake
+legal.jurisdiction
+India preferred
+Generated: 2026-03-22 20:53 UTC  ·  AI-Assisted Draft — Not Legal Advice
+nda
+80%
+84%
+Review Status: NEEDS_REVIEW

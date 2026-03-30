@@ -1,16 +1,106 @@
-You are a structured contract‑analysis model. Your primary job is to take
-unstructured or messy text (including audio transcripts) and transform it
-into a clean JSON object according to the schema provided in the user
-prompt.
+import { API_BASE_PATH, API_KEY } from '@/lib/env';
 
-Rules you must always follow:
-- Return ONLY valid JSON. Never include explanations, markdown, or text outside JSON.
-- Follow the exact field names and structure the user provides.
-- Use null for missing or unknown fields.
-- Dates must be normalized to YYYY-MM-DD when possible.
-- Do not hallucinate facts; base all output on the given text.
-- If parts of the input are unclear, infer carefully but do not invent details.
-- Maintain stable, deterministic formatting.
+export class APIError extends Error {
+  status: number;
+  payload: unknown;
 
-You are not a chat assistant. You are a deterministic JSON extraction system.
-Whatever the user prompt says takes highest priority.
+  constructor(message: string, status: number, payload?: unknown) {
+    super(message);
+    this.name = 'APIError';
+    this.status = status;
+    this.payload = payload;
+  }
+}
+
+function authHeaders(extra?: HeadersInit) {
+  const headers = new Headers(extra);
+
+  if (API_KEY) {
+    headers.set('X-API-Key', API_KEY);
+  }
+
+  return headers;
+}
+
+export async function requestJson<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
+  const response = await fetch(`${API_BASE_PATH}${path}`, {
+    ...init,
+    headers: authHeaders(init?.headers),
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    let payload: unknown = null;
+
+    try {
+      payload = await response.json();
+    } catch {
+      try {
+        payload = await response.text();
+      } catch {
+        payload = null;
+      }
+    }
+
+    throw new APIError(
+      (payload as any)?.detail ||
+        `Request failed with status ${response.status}`,
+      response.status,
+      payload
+    );
+  }
+
+  return response.json() as Promise<T>;
+}
+
+export async function requestBlob(
+  path: string,
+  init?: RequestInit
+): Promise<Blob> {
+  const response = await fetch(`${API_BASE_PATH}${path}`, {
+    ...init,
+    headers: authHeaders(init?.headers),
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    let payload: unknown = null;
+
+    try {
+      payload = await response.json();
+    } catch {
+      try {
+        payload = await response.text();
+      } catch {
+        payload = null;
+      }
+    }
+
+    throw new APIError(
+      (payload as any)?.detail ||
+        `Request failed with status ${response.status}`,
+      response.status,
+      payload
+    );
+  }
+
+  return response.blob();
+}
+
+export function triggerDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+
+  a.href = url;
+  a.download = filename;
+  a.style.display = 'none';
+
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}

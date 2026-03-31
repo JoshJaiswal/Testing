@@ -1,106 +1,385 @@
-import { API_BASE_PATH, API_KEY } from '@/lib/env';
-
-export class APIError extends Error {
-  status: number;
-  payload: unknown;
-
-  constructor(message: string, status: number, payload?: unknown) {
-    super(message);
-    this.name = 'APIError';
-    this.status = status;
-    this.payload = payload;
-  }
-}
-
-function authHeaders(extra?: HeadersInit) {
-  const headers = new Headers(extra);
-
-  if (API_KEY) {
-    headers.set('X-API-Key', API_KEY);
-  }
-
-  return headers;
-}
-
-export async function requestJson<T>(
-  path: string,
-  init?: RequestInit
-): Promise<T> {
-  const response = await fetch(`${API_BASE_PATH}${path}`, {
-    ...init,
-    headers: authHeaders(init?.headers),
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    let payload: unknown = null;
-
-    try {
-      payload = await response.json();
-    } catch {
-      try {
-        payload = await response.text();
-      } catch {
-        payload = null;
-      }
+{
+  "parties": {
+    "client": {
+      "name": "Contoso India Pvt. Ltd.",
+      "signatories": []
+    },
+    "vendor": {
+      "name": "Fabrikam Solutions Pvt. Ltd.",
+      "signatories": []
+    },
+    "ndaType": "mutual"
+  },
+  "dates": {
+    "effectiveDate": "2026-03-13",
+    "expirationDate": "",
+    "executionDate": ""
+  },
+  "scope": {
+    "description": "Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for downstream systems.",
+    "deliverables": [
+      "Configure Content Understanding custom task \\` deal-intake-doc\\` for extracting deal facts from transcripts/notes.",
+      "Integrate extracted JSON output into Contoso's internal workflow tool (REST webhook).",
+      "Provide dashboards for intake volume, missing-field rate, and confidence distribution.",
+      "Knowledge transfer session + admin guide."
+    ],
+    "outOfScope": "Full contract lifecycle management replacement Data warehouse buildout",
+    "milestones": [
+      "Target NDA execution: 2026-03-18 Pilot kickoff: 2026-03-24 Pilot duration: 12 weeks Weekly status calls; mid-pilot checkpoint at week 6"
+    ],
+    "sowReferenceId": "",
+    "locationAndTravel": ""
+  },
+  "confidentiality": {
+    "term": "3",
+    "obligations": [],
+    "exceptions": "Standard (public info, independently developed, required disclosure)"
+  },
+  "commercials": {
+    "totalValue": 1800000,
+    "paymentTerms": "50% on kickoff, 50% on completion",
+    "currency": "INR",
+    "pricingModel": "Fixed-fee pilot + usage-based scale option post-pilot",
+    "taxes": "GST extra as applicable",
+    "expenses": ""
+  },
+  "security": {
+    "requirements": "Encryption at rest and in transit; audit logs; role-based access",
+    "dataResidency": "India preferred",
+    "complianceStandards": "ISO 27001 alignment; basic SOC2 report acceptable if available",
+    "personalDataProcessing": "yes",
+    "privacyRequirements": "Procurement documents may include personal data (names, emails), vendor bank details, and contract terms."
+  },
+  "legal": {
+    "governingLaw": "Prefer Tamil Nadu / India",
+    "jurisdiction": "India preferred",
+    "disputeResolution": "",
+    "liabilityCap": "Proposed cap at fees paid in last 12 months",
+    "ipOwnership": "Customer retains ownership of customer data; vendor retains platform IP; customer wants a license to outputs.",
+    "warranties": "",
+    "indemnities": "",
+    "terminationForConvenience": "",
+    "terminationForCause": "",
+    "injunctiveRelief": "",
+    "licenseGrants": "",
+    "thirdPartySoftware": "",
+    "msaReference": "",
+    "serviceLevels": ""
+  },
+  "projectGovernance": {
+    "acceptanceCriteria": "",
+    "acceptanceTimeline": "",
+    "changeControl": "",
+    "issueEscalation": "",
+    "governanceModel": "",
+    "projectTimeline": "Pilot duration: 12 weeks Weekly status calls; mid-pilot checkpoint at week 6",
+    "keyPersonnel": "",
+    "dependencies": "",
+    "assumptions": "",
+    "constraints": ""
+  },
+  "risks": [],
+  "missingFields": [
+    "parties.client.signatories",
+    "parties.vendor.signatories",
+    "dates.expirationDate",
+    "dates.executionDate",
+    "scope.sowReferenceId",
+    "scope.locationAndTravel",
+    "confidentiality.obligations",
+    "commercials.expenses",
+    "legal.disputeResolution",
+    "legal.warranties",
+    "legal.indemnities",
+    "legal.terminationForConvenience",
+    "legal.terminationForCause",
+    "legal.injunctiveRelief",
+    "legal.licenseGrants",
+    "legal.thirdPartySoftware",
+    "legal.msaReference",
+    "legal.serviceLevels",
+    "projectGovernance.acceptanceCriteria",
+    "projectGovernance.acceptanceTimeline",
+    "projectGovernance.changeControl",
+    "projectGovernance.issueEscalation",
+    "projectGovernance.governanceModel",
+    "projectGovernance.keyPersonnel",
+    "projectGovernance.dependencies",
+    "projectGovernance.assumptions",
+    "projectGovernance.constraints"
+  ],
+  "conflicts": [
+    {
+      "field": "scope.outOfScope",
+      "chosen": "Full contract lifecycle management replacement Data warehouse buildout",
+      "chosenSource": "sow",
+      "alternatives": [
+        {
+          "value": [
+            "Full contract lifecycle management replacement",
+            "Data warehouse buildout"
+          ],
+          "source": "deal_intake"
+        }
+      ]
+    },
+    {
+      "field": "commercials.paymentTerms",
+      "chosen": "50% on kickoff, 50% on completion",
+      "chosenSource": "deal_intake",
+      "alternatives": [
+        {
+          "value": "Net 30 Invoicing: 50% on kickoff, 50% on completion",
+          "source": "sow"
+        }
+      ]
+    },
+    {
+      "field": "commercials.pricingModel",
+      "chosen": "Fixed-fee pilot + usage-based scale option post-pilot",
+      "chosenSource": "sow",
+      "alternatives": [
+        {
+          "value": "hybrid",
+          "source": "deal_intake"
+        }
+      ]
+    },
+    {
+      "field": "security.dataResidency",
+      "chosen": "India preferred",
+      "chosenSource": "nda",
+      "alternatives": [
+        {
+          "value": "India",
+          "source": "deal_intake"
+        }
+      ]
+    },
+    {
+      "field": "legal.governingLaw",
+      "chosen": "Prefer Tamil Nadu / India",
+      "chosenSource": "nda",
+      "alternatives": [
+        {
+          "value": "Tamil Nadu / India",
+          "source": "deal_intake"
+        },
+        {
+          "value": "Prefer Tamil Nadu / India",
+          "source": "sow"
+        }
+      ]
     }
-
-    throw new APIError(
-      (payload as any)?.detail ||
-        `Request failed with status ${response.status}`,
-      response.status,
-      payload
-    );
-  }
-
-  return response.json() as Promise<T>;
-}
-
-export async function requestBlob(
-  path: string,
-  init?: RequestInit
-): Promise<Blob> {
-  const response = await fetch(`${API_BASE_PATH}${path}`, {
-    ...init,
-    headers: authHeaders(init?.headers),
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    let payload: unknown = null;
-
-    try {
-      payload = await response.json();
-    } catch {
-      try {
-        payload = await response.text();
-      } catch {
-        payload = null;
-      }
+  ],
+  "provenance": [
+    {
+      "canonicalPath": "parties.client.name",
+      "value": "Contoso India Pvt. Ltd.",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "parties.vendor.name",
+      "value": "Fabrikam Solutions Pvt. Ltd.",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "parties.ndaType",
+      "value": "mutual",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "dates.effectiveDate",
+      "value": "2026-03-13",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "scope.description",
+      "value": "Deploy a pilot for extracting key fields from procurement documents and generating structured outputs for downstream systems.",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "scope.deliverables",
+      "value": "Configure Content Understanding custom task \\` deal-intake-doc\\` for extracting deal facts from transcripts/notes.; Inte",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "scope.outOfScope",
+      "value": "Full contract lifecycle management replacement Data warehouse buildout",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "scope.milestones",
+      "value": "Target NDA execution: 2026-03-18 Pilot kickoff: 2026-03-24 Pilot duration: 12 weeks Weekly status calls; mid-pilot check",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "confidentiality.term",
+      "value": "3",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "confidentiality.exceptions",
+      "value": "Standard (public info, independently developed, required disclosure)",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "commercials.totalValue",
+      "value": "1800000",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "commercials.paymentTerms",
+      "value": "50% on kickoff, 50% on completion",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "commercials.currency",
+      "value": "INR",
+      "sourceDocumentId": "",
+      "sourceField": "deal_intake",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.811
+    },
+    {
+      "canonicalPath": "commercials.pricingModel",
+      "value": "Fixed-fee pilot + usage-based scale option post-pilot",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "commercials.taxes",
+      "value": "GST extra as applicable",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "security.requirements",
+      "value": "Encryption at rest and in transit; audit logs; role-based access",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "security.dataResidency",
+      "value": "India preferred",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "security.complianceStandards",
+      "value": "ISO 27001 alignment; basic SOC2 report acceptable if available",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "security.personalDataProcessing",
+      "value": "yes",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "security.privacyRequirements",
+      "value": "Procurement documents may include personal data (names, emails), vendor bank details, and contract terms.",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "legal.governingLaw",
+      "value": "Prefer Tamil Nadu / India",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "legal.jurisdiction",
+      "value": "India preferred",
+      "sourceDocumentId": "",
+      "sourceField": "nda",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.845
+    },
+    {
+      "canonicalPath": "legal.liabilityCap",
+      "value": "Proposed cap at fees paid in last 12 months",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "legal.ipOwnership",
+      "value": "Customer retains ownership of customer data; vendor retains platform IP; customer wants a license to outputs.",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
+    },
+    {
+      "canonicalPath": "projectGovernance.projectTimeline",
+      "value": "Pilot duration: 12 weeks Weekly status calls; mid-pilot checkpoint at week 6",
+      "sourceDocumentId": "",
+      "sourceField": "sow",
+      "sourceFamily": "cu_analyzer",
+      "confidence": 0.687
     }
-
-    throw new APIError(
-      (payload as any)?.detail ||
-        `Request failed with status ${response.status}`,
-      response.status,
-      payload
-    );
+  ],
+  "review": {
+    "status": "needs_review",
+    "reviewReason": [
+      "5 field conflict(s) found"
+    ],
+    "reviewedBy": "",
+    "reviewedAt": ""
   }
-
-  return response.blob();
-}
-
-export function triggerDownload(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-
-  a.href = url;
-  a.download = filename;
-  a.style.display = 'none';
-
-  document.body.appendChild(a);
-  a.click();
-
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
